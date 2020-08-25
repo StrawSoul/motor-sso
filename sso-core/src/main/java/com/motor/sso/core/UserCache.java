@@ -26,4 +26,7 @@ public interface UserCache {
     public String save(SimpleUserInfo userInfo);
 
     SimpleUserInfo get(String token);
+
+    String getVerifyCode(String business, String key);
+    void setVerifyCode(String business, String key, String value);
 }

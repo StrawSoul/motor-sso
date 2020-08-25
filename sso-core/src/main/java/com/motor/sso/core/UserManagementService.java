@@ -30,7 +30,7 @@ public class UserManagementService {
 
     public String createUser(Command<UserCreate> command){
         userValidator.createAble(command);
-        User user = userFactory.create(command);
+        SsoUser user = userFactory.create(command);
         userRepository.insert(user);
         return user.getId();
     }

@@ -2,6 +2,7 @@ package com.motor.sso.core;
 
 import com.motor.common.message.command.Command;
 import com.motor.sso.core.command.UserCreate;
+import com.motor.sso.core.command.UserLogin;
 import com.motor.sso.core.command.UserSecurityValidate;
 
 /**
@@ -24,16 +25,18 @@ import com.motor.sso.core.command.UserSecurityValidate;
  * ===========================================================================================
  */
 public interface UserValidator {
-    public void createAble(Command<UserCreate> command) ;
-    public void isRepeat(UserSecurityValidate command) ;
+    UserValidator createAble(Command<UserCreate> command) ;
+    UserValidator isRepeat(UserSecurityValidate command) ;
 
 
-    public void isUsernameLegal(String username) ;
-    public void isLegal(UserSecurityValidate command) ;
+    UserValidator isUsernameLegal(String username) ;
+    UserValidator isLegal(UserSecurityValidate command) ;
 
-    public void isRequired(String value, String desc) ;
+    UserValidator isRequired(String value, String desc) ;
 
-    public void validateSecurityKey(String securityKey, String securityValue) ;
+    UserValidator validateSecurityKey(String securityKey, String securityValue) ;
 
-    public void validateUserSecurity(User user, String securityKey, String securityValue) ;
+    UserValidator validateUserSecurity(SsoUser user, UserLogin userLogin) ;
+
+    UserValidator validateVerifyCode(UserSecurityValidate userSecurityValidate, String value);
 }

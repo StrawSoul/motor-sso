@@ -35,9 +35,9 @@ Configuration:
       level: info
       AppenderRef:
         - ref: ASYNC
-#    logger:
-#      - name: com.alibaba.nacos
-#        level: warn
-#        additivity: false
-#        AppenderRef:
-#          - ref: ASYNC
+    logger:
+      - name: com.motor.sso.server.impl
+        level: debug
+        additivity: false
+        AppenderRef:
+          - ref: ASYNC

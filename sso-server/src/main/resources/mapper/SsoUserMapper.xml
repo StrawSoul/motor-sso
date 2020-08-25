@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.motor.sso.server.impl.mapper.SsoUserMapper" >
+
+    <resultMap type="com.motor.sso.core.SsoUser" id="ssoUser">
+        <id column="id" property="id"/>
+        <result column="username" property="username"/>
+        <result column="nickname" property="nickname"/>
+        <result column="mobile" property="mobile"/>
+        <result column="email" property="email"/>
+        <result column="status" property="status"/>
+        <result column="deleted" property="deleted"/>
+    </resultMap>
+
+    <resultMap type="com.motor.sso.core.UserSecurity" id="ssoUserSecurity">
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="type" property="type"/>
+        <result column="security_key" property="securityKey"/>
+        <result column="security_value" property="securityValue"/>
+        <result column="deleted" property="deleted"/>
+    </resultMap>
+
+    <select id="findById" resultMap="ssoUser" parameterType="String">
+        select * from  sso_user where id = #{id}
+    </select>
+
+    <select id="findBySecurityKey" resultMap="ssoUser" parameterType="String">
+        select
+            u.id id,
+            u.username username,
+            u.nickname nickname,
+            u.mobile mobile,
+            u.email email,
+            u.status status,
+            u.deleted deleted
+        from sso_user_security us
+        left join sso_user u on u.id = us.user_id
+        where
+            us.security_key = #{securityKey}
+        and us.deleted = 0
+        and u.deleted = 0
+    </select>
+    <select id="findSecurityByKey" resultMap="ssoUserSecurity" parameterType="String">
+        select
+        us.id id,
+        us.user_id user_id,
+        us.type type,
+        us.salt salt,
+        us.security_key security_key,
+        us.security_value security_value
+        from sso_user_security us
+        where us.security_key = #{securityKey} and us.deleted = 0
+    </select>
+
+</mapper>

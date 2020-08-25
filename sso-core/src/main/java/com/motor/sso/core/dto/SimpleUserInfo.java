@@ -1,5 +1,7 @@
 package com.motor.sso.core.dto;
 
+import java.io.Serializable;
+
 /**
  * ===========================================================================================
  * 设计说明
@@ -19,5 +21,36 @@ package com.motor.sso.core.dto;
  * <p>
  * ===========================================================================================
  */
-public class SimpleUserInfo {
+public class SimpleUserInfo implements Serializable {
+
+    private static final long serialVersionUID = -8554721689548734025L;
+
+    private String id;
+    private String username;
+    private String nickname;
+
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
 }

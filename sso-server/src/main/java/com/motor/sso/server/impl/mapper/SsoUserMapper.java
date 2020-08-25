@@ -1,4 +1,8 @@
-package com.motor.sso.core.command;
+package com.motor.sso.server.impl.mapper;
+
+import com.motor.sso.core.SsoUser;
+import com.motor.sso.core.UserSecurity;
+import org.springframework.stereotype.Repository;
 
 /**
  * ===========================================================================================
@@ -12,40 +16,23 @@ package com.motor.sso.core.command;
  * ===========================================================================================
  * 变更记录
  * -------------------------------------------------------------------------------------------
- * version: 0.0.0  2020/8/20 10:00  zlj
+ * version: 0.0.0  2020/8/25 13:00  zlj
  * 创建
  * -------------------------------------------------------------------------------------------
  * version: 0.0.1  {date}       {author}
  * <p>
  * ===========================================================================================
  */
-public class UserRegister {
+@Repository
+public interface SsoUserMapper {
 
-    private UserSecurityValidate userSecurity;
-    private String username;
-    private String password;
+    SsoUser findById(String id);
 
-    public UserSecurityValidate getUserSecurity() {
-        return userSecurity;
-    }
+    SsoUser findBySecurityKey(String key);
 
-    public void setUserSecurity(UserSecurityValidate userSecurity) {
-        this.userSecurity = userSecurity;
-    }
+    UserSecurity findSecurityByKey(String key);
 
-    public String getUsername() {
-        return username;
-    }
+    void insert(SsoUser entity);
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
+    void insertSecurity(UserSecurity f);
 }

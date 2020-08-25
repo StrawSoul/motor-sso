@@ -25,8 +25,12 @@ public class UserSecurity implements Serializable {
 
     private static final long serialVersionUID = 6653962803435543113L;
     private String id;
+    private String userId;
+    private String type;
     private String securityKey;
     private String securityValue;
+    private String salt;
+    private Boolean deleted;
 
     public String getId() {
         return id;
@@ -34,6 +38,14 @@ public class UserSecurity implements Serializable {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public String getSecurityKey() {
@@ -50,5 +62,29 @@ public class UserSecurity implements Serializable {
 
     public void setSecurityValue(String securityValue) {
         this.securityValue = securityValue;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getSalt() {
+        return salt;
+    }
+
+    public void setSalt(String salt) {
+        this.salt = salt;
+    }
+
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
     }
 }

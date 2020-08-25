@@ -27,8 +27,8 @@ import org.springframework.context.annotation.Configuration;
 public class ApplicationConfig {
 
     @Bean
-    public UserService userService(UserRepository userRepository, UserValidator userValidator, UserFactory userFactory, UserCache cache){
-        return new UserService(userRepository,userValidator, userFactory, cache);
+    public SsoUserService userService(UserRepository userRepository, UserValidator userValidator, UserFactory userFactory, UserCache cache){
+        return new SsoUserService(userRepository,userValidator, userFactory, cache);
     }
 
 }

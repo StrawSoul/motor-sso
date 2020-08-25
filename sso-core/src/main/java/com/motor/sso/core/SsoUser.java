@@ -24,7 +24,7 @@ import java.util.Map;
  * <p>
  * ===========================================================================================
  */
-public class User implements Entity<String> {
+public class SsoUser implements Entity<String> {
     private String id;
     private Person person;
     private Map<String, List<UserSecurity>> security;

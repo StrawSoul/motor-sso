@@ -21,8 +21,8 @@ import com.motor.common.domain.Repository;
  * <p>
  * ===========================================================================================
  */
-public interface UserRepository extends Repository<String, User> {
+public interface UserRepository extends Repository<String, SsoUser> {
 
-    User findBySecurityKey(String key);
+    SsoUser findBySecurityKey(String key);
 
 }

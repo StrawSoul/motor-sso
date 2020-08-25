@@ -26,13 +26,14 @@ import static com.motor.sso.core.exception.SSOUserErrorCode.USER_NOT_LOGIN;
  * <p>
  * ===========================================================================================
  */
-public class UserService {
+public class SsoUserService {
+
     private UserRepository userRepository;
     private UserValidator userValidator;
     private UserFactory userFactory;
     private UserCache cache;
 
-    public UserService(UserRepository userRepository, UserValidator userValidator, UserFactory userFactory, UserCache cache) {
+    public SsoUserService(UserRepository userRepository, UserValidator userValidator, UserFactory userFactory, UserCache cache) {
         this.userRepository = userRepository;
         this.userValidator = userValidator;
         this.userFactory = userFactory;
@@ -40,20 +41,26 @@ public class UserService {
     }
 
     public String register(Command<UserRegister> command){
+
         UserRegister data = command.data();
-        UserSecurityValidate userSecurityValidate = data.getUserSecurityValidate();
-        userValidator.isRequired(data.getUsername(),"用户名不鞥能为空");
-        userValidator.isUsernameLegal(data.getUsername());
-        userValidator.isLegal(userSecurityValidate);
-        userValidator.isRepeat(userSecurityValidate);
-        User user = userFactory.createUserForRegister(command);
+        UserSecurityValidate userSecurityValidate = data.getUserSecurity();
+        String value = cache.getVerifyCode("register",userSecurityValidate.getKey());
+
+        userValidator.isUsernameLegal(data.getUsername())
+        .isLegal(userSecurityValidate)
+        .isRepeat(userSecurityValidate)
+        .validateVerifyCode(userSecurityValidate, value);
+
+        SsoUser user = userFactory.createUserForRegister(command);
+
         userRepository.insert(user);
+
         return user.getId();
     }
     public void edit(Command<UserEdit> command){
         UserEdit data = command.data();
-        User oldUser = userRepository.findById(data.getId());
-        User newUser = userFactory.edit(oldUser, command);
+        SsoUser oldUser = userRepository.findById(data.getId());
+        SsoUser newUser = userFactory.edit(oldUser, command);
         userRepository.update(newUser);
     }
 
@@ -62,11 +69,12 @@ public class UserService {
         userValidator.isLegal(data);
         userValidator.isRepeat(data);
     }
+
     public String login(Command<UserLogin> command){
         UserLogin data = command.data();
-        userValidator.isRequired(data.getSecurityValue(), "密码不能唯恐");
-        User user = userRepository.findBySecurityKey(data.getSecurityKey());
-        userValidator.validateUserSecurity(user,data.getSecurityKey(), data.getSecurityValue());
+        userValidator.isRequired(data.getSecurityValue(), "密码不能为空");
+        SsoUser user = userRepository.findBySecurityKey(data.getSecurityKey());
+        userValidator.validateUserSecurity(user, data);
         SimpleUserInfo simpleUserInfo = userFactory.createSimpleInfo(user);
         String token = cache.save(simpleUserInfo);
         return token;
@@ -82,5 +90,15 @@ public class UserService {
     }
 
 
+    public void logout(Command<UserLogout> cmd) {
 
+    }
+
+    public void modifyPassword(Command cmd) {
+
+    }
+
+    public void usernameExits(Command cmd) {
+
+    }
 }

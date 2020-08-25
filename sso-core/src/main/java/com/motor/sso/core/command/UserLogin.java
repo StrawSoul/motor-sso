@@ -21,9 +21,18 @@ package com.motor.sso.core.command;
  */
 public class UserLogin {
 
+    private String type;
     private String securityValue;
     private String securityKey;
     private String validateCode;
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 
     public String getSecurityValue() {
         return securityValue;
