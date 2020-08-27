@@ -1,6 +1,12 @@
-package com.motor.sso.core.command;
+package com.motor.sso.server.impl;
 
+import com.motor.sso.core.PrimaryKeyProducer;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * ===========================================================================================
@@ -14,49 +20,28 @@ import java.util.Map;
  * ===========================================================================================
  * 变更记录
  * -------------------------------------------------------------------------------------------
- * version: 0.0.0  2020/8/20 10:00  zlj
+ * version: 0.0.0  2020/8/25 16:00  zlj
  * 创建
  * -------------------------------------------------------------------------------------------
  * version: 0.0.1  {date}       {author}
  * <p>
  * ===========================================================================================
  */
-public class UserRegister {
-
-    private Map<String,UserSecurityValidate> security;
-    private String password;
-    private String nickname;
-    private String verifyType;
-
-    public Map<String, UserSecurityValidate> getSecurity() {
-        return security;
+@Service
+public class SimplePrimaryKeyProducer implements PrimaryKeyProducer {
+    private Map<String,Long> map = new ConcurrentHashMap<>();
+    @Override
+    public String produce(String businessCode) {
+        String random = RandomStringUtils.random(3, "1234567890");
+        return new StringBuilder().append(System.currentTimeMillis()).append(random).toString();
     }
 
-    public void setSecurity(Map<String, UserSecurityValidate> security) {
-        this.security = security;
-    }
-
-    public String getNickname() {
-        return nickname;
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getVerifyType() {
-        return verifyType;
-    }
-
-    public void setVerifyType(String verifyType) {
-        this.verifyType = verifyType;
+    @Override
+    public String[] produce(String businessCode, int n) {
+        String[] arr = new String[n];
+        for (int i = 0; i < n; i++) {
+            arr[i] = produce(businessCode);
+        }
+        return arr;
     }
 }

@@ -26,6 +26,7 @@ import com.motor.sso.core.dto.SimpleUserInfo;
  * ===========================================================================================
  */
 public interface UserFactory {
+
     SsoUser create(Command<UserCreate> command);
 
     SsoUser edit(SsoUser user, Command<UserEdit> command);
@@ -33,4 +34,6 @@ public interface UserFactory {
     SsoUser createUserForRegister(Command<UserRegister> command);
 
     SimpleUserInfo createSimpleInfo(SsoUser user);
+
+    SimpleUserInfo createGuest();
 }

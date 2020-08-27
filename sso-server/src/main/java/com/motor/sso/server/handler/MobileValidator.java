@@ -1,4 +1,11 @@
-package com.motor.sso.core.command;
+package com.motor.sso.server.handler;
+
+import com.motor.common.exception.ParameterLegalException;
+import org.springframework.stereotype.Service;
+
+import java.util.regex.Pattern;
+
+import static com.motor.sso.server.constants.ValidErrorCode.PARAM_LEGAL_ERROR;
 
 /**
  * ===========================================================================================
@@ -12,54 +19,24 @@ package com.motor.sso.core.command;
  * ===========================================================================================
  * 变更记录
  * -------------------------------------------------------------------------------------------
- * version: 0.0.0  2020/8/20 10:00  zlj
+ * version: 0.0.0  2020/8/26 16:00  zlj
  * 创建
  * -------------------------------------------------------------------------------------------
  * version: 0.0.1  {date}       {author}
  * <p>
  * ===========================================================================================
  */
-public class UserSecurityValidate {
+@Service("mobile-validator")
+public class MobileValidator implements SecurityKeyValidator {
 
-    private String type;
-    private String key;
-    private String value;
+    private static  final Pattern compile = Pattern.compile("^(\\+86)?[0-9]{11}$");
 
-    public UserSecurityValidate() {
-    }
+    @Override
+    public void validate(String key) {
 
-    public UserSecurityValidate(String type, String key) {
-        this.type = type;
-        this.key = key;
-    }
+        if(!compile.matcher(key).matches()){
+            throw new ParameterLegalException(PARAM_LEGAL_ERROR,"手机号","不符合规则");
+        }
 
-    public UserSecurityValidate(String type, String key, String value) {
-        this.type = type;
-        this.key = key;
-        this.value = value;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getKey() {
-        return key;
-    }
-
-    public void setKey(String key) {
-        this.key = key;
-    }
-
-    public String getValue() {
-        return value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
     }
 }

@@ -10,6 +10,7 @@
     <modules>
         <module>sso-core</module>
         <module>sso-server</module>
+        <module>sso-client</module>
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

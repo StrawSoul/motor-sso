@@ -26,37 +26,30 @@ import java.util.Map;
  */
 public class SsoUser implements Entity<String> {
     private String id;
-    private Person person;
-    private Map<String, List<UserSecurity>> security;
-    private String username;
     private String nickname;
-    private String mobile;
-    private String email;
+    private String password;
+    private String salt;
+    private String appId;
+    private String channel;
     private int status;
     private boolean deleted;
 
-    public Person getPerson() {
-        return person;
-    }
+    private Map<String,UserSecurity> security;
 
-    public void setPerson(Person person) {
-        this.person = person;
-    }
-
-    public Map<String, List<UserSecurity>> getSecurity() {
+    public Map<String, UserSecurity> getSecurity() {
         return security;
     }
 
-    public void setSecurity(Map<String, List<UserSecurity>> security) {
+    public String getSalt() {
+        return salt;
+    }
+
+    public void setSalt(String salt) {
+        this.salt = salt;
+    }
+
+    public void setSecurity(Map<String, UserSecurity> security) {
         this.security = security;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     public String getNickname() {
@@ -67,21 +60,6 @@ public class SsoUser implements Entity<String> {
         this.nickname = nickname;
     }
 
-    public String getMobile() {
-        return mobile;
-    }
-
-    public void setMobile(String mobile) {
-        this.mobile = mobile;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
 
     public int getStatus() {
         return status;
@@ -105,5 +83,29 @@ public class SsoUser implements Entity<String> {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getAppId() {
+        return appId;
+    }
+
+    public void setAppId(String appId) {
+        this.appId = appId;
+    }
+
+    public String getChannel() {
+        return channel;
+    }
+
+    public void setChannel(String channel) {
+        this.channel = channel;
     }
 }

@@ -1,6 +1,7 @@
 package com.motor.sso.server.impl;
 
 import com.motor.common.message.command.Command;
+import com.motor.sso.client.CurrentUserRepository;
 import com.motor.sso.core.PrimaryKeyProducer;
 import com.motor.sso.core.SsoUser;
 import com.motor.sso.core.UserFactory;
@@ -10,15 +11,13 @@ import com.motor.sso.core.command.UserEdit;
 import com.motor.sso.core.command.UserRegister;
 import com.motor.sso.core.command.UserSecurityValidate;
 import com.motor.sso.core.dto.SimpleUserInfo;
+import com.motor.sso.server.constants.UserSecurityType;
 import com.motor.sso.server.utils.SSOUtils;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * ===========================================================================================
@@ -39,11 +38,13 @@ import java.util.Map;
  * <p>
  * ===========================================================================================
  */
-@Service
 public class UserFactoryImpl implements UserFactory {
 
     @Autowired
     private PrimaryKeyProducer primaryKeyProducer;
+
+    @Autowired
+    private CurrentUserRepository<SimpleUserInfo> currentUserRepository;
 
     public SsoUser create(Command<UserCreate> command) {
         UserCreate userCreate = command.getData();
@@ -60,39 +61,40 @@ public class UserFactoryImpl implements UserFactory {
 
     public SsoUser createUserForRegister(Command<UserRegister> command) {
         UserRegister userRegister = command.getData();
-        UserSecurityValidate userSecurityValidate = userRegister.getUserSecurity();
+        Map<String, UserSecurityValidate> security = userRegister.getSecurity();
 
-        String userId = primaryKeyProducer.produce("sso-user");
+        String userId = null;
+        SimpleUserInfo simpleUserInfo = currentUserRepository.get();
+        if(simpleUserInfo != null){
+            userId = simpleUserInfo.getUserId();
+        } else {
+            userId = primaryKeyProducer.produce("sso-user");
+        }
+        String salt = SSOUtils.randomString(5);
+        String pwd = SSOUtils.md5(salt, userRegister.getPassword());
 
         SsoUser ssoUser = new SsoUser();
         ssoUser.setId(userId);
+        ssoUser.setPassword(pwd);
+        ssoUser.setSalt(salt);
         ssoUser.setDeleted(false);
         ssoUser.setStatus(0);
-        ssoUser.setUsername(userRegister.getUsername());
 
-        String[] ids = primaryKeyProducer.produce("sso-user-security", 2);
-        UserSecurity userSecurity = new UserSecurity();
-        String salt = RandomStringUtils.random(5);
-        String pwd = SSOUtils.md5(salt, userRegister.getPassword());
-        userSecurity.setId(ids[0]);
-        userSecurity.setSalt(salt);
-        userSecurity.setSecurityValue(pwd);
-        userSecurity.setSecurityKey(userRegister.getUsername());
-        userSecurity.setDeleted(false);
-        userSecurity.setUserId(userId);
 
-        UserSecurity userSecurity2 = new UserSecurity();
-        userSecurity2.setId(ids[1]);
-        userSecurity2.setType(userSecurityValidate.getType());
-        userSecurity2.setSecurityKey(userSecurityValidate.getKey());
-        userSecurity2.setDeleted(false);
-        userSecurity2.setUserId(userId);
+        String[] ids = primaryKeyProducer.produce("sso-user-security", security.size());
+        Map<String, UserSecurity>  map = new HashMap<>();
+        AtomicInteger i = new AtomicInteger(0);
+        security.forEach((k,v)->{
 
-        Map<String, List<UserSecurity>>  map = new HashMap<>();
+            UserSecurity userSecurity = new UserSecurity();
 
-        map.put("username", Arrays.asList(userSecurity));
-        map.put(userSecurityValidate.getType(), Arrays.asList(userSecurity2));
-
+            userSecurity.setId(ids[i.getAndAdd(1)]);
+            userSecurity.setType(v.getType());
+            userSecurity.setSecurityKey(v.getKey());
+            userSecurity.setDeleted(false);
+            userSecurity.setUserId(ssoUser.getId());
+            map.put(v.getType(), userSecurity);
+        });
         ssoUser.setSecurity(map);
 
         return ssoUser;
@@ -100,7 +102,20 @@ public class UserFactoryImpl implements UserFactory {
 
     public SimpleUserInfo createSimpleInfo(SsoUser user) {
         SimpleUserInfo simpleUserInfo = new SimpleUserInfo();
-        simpleUserInfo.setUsername(user.getUsername());
+        UserSecurity userSecurity = user.getSecurity().get(UserSecurityType.username.name());
+        if(userSecurity != null){
+            simpleUserInfo.setUsername(userSecurity.getSecurityKey());
+        }
+        simpleUserInfo.setNickname(user.getNickname());
+        simpleUserInfo.setUserId(user.getId());
+        return simpleUserInfo;
+    }
+
+    public SimpleUserInfo createGuest(){
+        SimpleUserInfo simpleUserInfo = new SimpleUserInfo();
+        String userId = primaryKeyProducer.produce("sso-user");
+        simpleUserInfo.setUserId(userId);
+        simpleUserInfo.setGuest(true);
         return simpleUserInfo;
     }
 }

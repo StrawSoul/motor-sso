@@ -25,4 +25,5 @@ public interface UserRepository extends Repository<String, SsoUser> {
 
     SsoUser findBySecurityKey(String key);
 
+    String findSecurityTypeByKey(String key);
 }

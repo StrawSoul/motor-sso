@@ -1,8 +1,4 @@
-package com.motor.sso.server.impl.mapper;
-
-import com.motor.sso.core.SsoUser;
-import com.motor.sso.core.UserSecurity;
-import org.springframework.stereotype.Repository;
+package com.motor.sso.client;
 
 /**
  * ===========================================================================================
@@ -16,23 +12,24 @@ import org.springframework.stereotype.Repository;
  * ===========================================================================================
  * 变更记录
  * -------------------------------------------------------------------------------------------
- * version: 0.0.0  2020/8/25 13:00  zlj
+ * version: 0.0.0  2020/8/27 11:00  zlj
  * 创建
  * -------------------------------------------------------------------------------------------
  * version: 0.0.1  {date}       {author}
  * <p>
  * ===========================================================================================
  */
-@Repository
-public interface SsoUserMapper {
+public class CurrentUserRepository<T> {
+    private ThreadLocal<T> threadLocal = new ThreadLocal<>();
 
-    SsoUser findById(String id);
+    public void save(T t){
+        threadLocal.set(t);
+    }
+    public T get(){
+        return threadLocal.get();
+    }
+    public void remove(){
+        threadLocal.remove();
+    }
 
-    SsoUser findBySecurityKey(String key);
-
-    UserSecurity findSecurityByKey(String key);
-
-    void insert(SsoUser entity);
-
-    void insertSecurity(UserSecurity f);
 }

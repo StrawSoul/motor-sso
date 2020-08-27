@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.motor.sso.server.impl.mapper.SsoUserMapper" >
+<mapper namespace="com.motor.sso.server.mapper.SsoUserMapper" >
 
     <resultMap type="com.motor.sso.core.SsoUser" id="ssoUser">
         <id column="id" property="id"/>
-        <result column="username" property="username"/>
         <result column="nickname" property="nickname"/>
-        <result column="mobile" property="mobile"/>
-        <result column="email" property="email"/>
+        <result column="password" property="password"/>
+        <result column="salt" property="salt"/>
         <result column="status" property="status"/>
         <result column="deleted" property="deleted"/>
     </resultMap>
@@ -28,10 +27,9 @@
     <select id="findBySecurityKey" resultMap="ssoUser" parameterType="String">
         select
             u.id id,
-            u.username username,
             u.nickname nickname,
-            u.mobile mobile,
-            u.email email,
+            u.password password,
+            u.salt salt,
             u.status status,
             u.deleted deleted
         from sso_user_security us
@@ -46,11 +44,26 @@
         us.id id,
         us.user_id user_id,
         us.type type,
-        us.salt salt,
-        us.security_key security_key,
-        us.security_value security_value
+        us.security_key security_key
         from sso_user_security us
         where us.security_key = #{securityKey} and us.deleted = 0
     </select>
 
+    <select id="findSecurityTypeByKey" parameterType="String" resultType="String">
+        select type
+        from sso_user_security
+        where security_key = #{key} and deleted = 0
+    </select>
+
+    <insert id="insert" parameterType="com.motor.sso.core.SsoUser" >
+        insert into sso_user (id,nickname,password,salt,status,deleted)
+        values (
+            #{id},#{nickname},#{password},#{salt},0,0
+        )
+    </insert>
+
+    <insert id="insertSecurity" parameterType="com.motor.sso.core.UserSecurity" >
+        insert into sso_user_security (id,user_id,type,security_key,deleted)
+        values(#{id},#{userId},#{type},#{securityKey},0)
+    </insert>
 </mapper>

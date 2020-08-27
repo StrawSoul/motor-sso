@@ -39,7 +39,14 @@ spring:
       #打开PSCache，并指定每个连接上PSCache的大小。oracle设为true，mysql设为false。分库分表较多推荐设置为false
       pool-prepared-statements: false
       max-pool-prepared-statement-per-connection-size: 20
-
+  redis:
+    host: localhost
+    port: 6379
+    max-wait: 30000
+    max-active: 100
+    max-idle: 20
+    min-idle: 0
+    timeout: 2000
 mybatis:
   mapper-locations: classpath:mapper/*.xml
   type-aliases-package: com.motor.sso.core

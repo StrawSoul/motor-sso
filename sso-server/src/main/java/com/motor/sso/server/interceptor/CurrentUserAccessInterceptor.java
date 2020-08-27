@@ -1,17 +1,15 @@
-package com.motor.sso.server.controller;
+package com.motor.sso.server.interceptor;
 
-import com.motor.common.message.command.Command;
-import com.motor.common.message.command.CommandBuilder;
-import com.motor.common.message.result.ResultBuilder;
-import com.motor.common.message.result.ResultData;
-import com.motor.sso.core.command.VerifyCodeSend;
-import com.motor.sso.server.impl.BaseService;
+import com.motor.common.exception.BusinessRuntimeException;
+import com.motor.sso.client.CurrentUserRepository;
+import com.motor.sso.core.dto.SimpleUserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import static com.motor.sso.core.exception.SSOUserErrorCode.USER_NOT_LOGIN;
 
 /**
  * ===========================================================================================
@@ -25,31 +23,24 @@ import javax.servlet.http.HttpServletResponse;
  * ===========================================================================================
  * 变更记录
  * -------------------------------------------------------------------------------------------
- * version: 0.0.0  2020/8/25 09:00  zlj
+ * version: 0.0.0  2020/8/27 13:00  zlj
  * 创建
  * -------------------------------------------------------------------------------------------
  * version: 0.0.1  {date}       {author}
  * <p>
  * ===========================================================================================
  */
-@Controller
-@RequestMapping("base")
-public class BaseController {
+public class CurrentUserAccessInterceptor implements HandlerInterceptor {
 
     @Autowired
-    private BaseService baseService;
+    private CurrentUserRepository<SimpleUserInfo> currentUserRepository;
 
-    @GetMapping(value = "/captcha")
-    public void captcha(HttpServletRequest req, HttpServletResponse resp){
-
+    @Override
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        SimpleUserInfo simpleUserInfo = currentUserRepository.get();
+        if(simpleUserInfo == null || simpleUserInfo.isGuest()){
+            throw new BusinessRuntimeException(USER_NOT_LOGIN);
+        }
+        return true;
     }
-
-    @PostMapping(value = "verification-code/send")
-    @ResponseBody
-    public ResultData sendVerifyCode(@RequestBody VerifyCodeSend verifyCodeSend){
-        Command cmd = CommandBuilder.getInstance().data(verifyCodeSend).build();
-        baseService.sendVerifyCode(cmd);
-        return ResultBuilder.getInstance().success().build();
-    }
-
 }

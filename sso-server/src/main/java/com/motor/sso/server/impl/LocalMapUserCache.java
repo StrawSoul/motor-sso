@@ -33,32 +33,24 @@ import java.util.concurrent.ConcurrentHashMap;
  * <p>
  * ===========================================================================================
  */
-@Service
-public class UserCacheImpl implements UserCache {
+public class LocalMapUserCache implements UserCache {
 
-    private Cache<String, SimpleUserInfo> cache;
+    private Map<String, SimpleUserInfo> cache = new ConcurrentHashMap<>();
 
     private Map<String,String> verifyCodes = new ConcurrentHashMap<>();
 
-    public UserCacheImpl() {
-    }
 
-    public synchronized Cache<String, SimpleUserInfo> cache(){
-        if(cache == null){
-            cache = CacheBuilder.newBuilder().build();
-        }
-        return cache;
-    }
+
 
     public String save(SimpleUserInfo userInfo) {
-        String key = String.valueOf(System.currentTimeMillis());
-        String token = SSOUtils.md5(key, userInfo.getUsername());
-        cache().put(token, userInfo);
+        String key = SSOUtils.randomString(6);
+        String token = SSOUtils.md5(key, userInfo.getUserId());
+        cache.put(token, userInfo);
         return token;
     }
 
     public SimpleUserInfo get(String token) {
-        return null;
+        return cache.get(token);
     }
 
     @Override
@@ -68,8 +60,12 @@ public class UserCacheImpl implements UserCache {
 
     @Override
     public void setVerifyCode(String business, String key, String value) {
-
         verifyCodes.put(business+":"+ key, value);
+    }
+
+    @Override
+    public void remove(String token) {
+        cache.remove(token);
     }
 
 }

@@ -25,17 +25,18 @@ public class SimpleUserInfo implements Serializable {
 
     private static final long serialVersionUID = -8554721689548734025L;
 
-    private String id;
+    private String userId;
     private String username;
     private String nickname;
+    private boolean guest;
 
 
-    public String getId() {
-        return id;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getNickname() {
@@ -52,5 +53,13 @@ public class SimpleUserInfo implements Serializable {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public boolean isGuest() {
+        return guest;
+    }
+
+    public void setGuest(boolean guest) {
+        this.guest = guest;
     }
 }

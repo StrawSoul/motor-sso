@@ -1,6 +1,8 @@
 package com.motor.sso.server.config;
 
+import com.motor.sso.client.CurrentUserRepository;
 import com.motor.sso.core.*;
+import com.motor.sso.core.dto.SimpleUserInfo;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -26,9 +28,14 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class ApplicationConfig {
 
-    @Bean
+//    @Bean
     public SsoUserService userService(UserRepository userRepository, UserValidator userValidator, UserFactory userFactory, UserCache cache){
         return new SsoUserService(userRepository,userValidator, userFactory, cache);
+    }
+
+    @Bean
+    public CurrentUserRepository<SimpleUserInfo> currentUserRepository(){
+        return new CurrentUserRepository<>();
     }
 
 }

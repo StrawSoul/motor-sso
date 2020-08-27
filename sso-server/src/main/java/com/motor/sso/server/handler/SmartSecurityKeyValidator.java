@@ -1,6 +1,11 @@
-package com.motor.sso.core.command;
+package com.motor.sso.server.handler;
+
+import com.motor.sso.core.command.UserSecurityValidate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * ===========================================================================================
@@ -14,49 +19,29 @@ import java.util.Map;
  * ===========================================================================================
  * 变更记录
  * -------------------------------------------------------------------------------------------
- * version: 0.0.0  2020/8/20 10:00  zlj
+ * version: 0.0.0  2020/8/26 16:00  zlj
  * 创建
  * -------------------------------------------------------------------------------------------
  * version: 0.0.1  {date}       {author}
  * <p>
  * ===========================================================================================
  */
-public class UserRegister {
+@Service
+public class SmartSecurityKeyValidator {
 
-    private Map<String,UserSecurityValidate> security;
-    private String password;
-    private String nickname;
-    private String verifyType;
+    @Autowired
+    private Map<String,SecurityKeyValidator> map ;
 
-    public Map<String, UserSecurityValidate> getSecurity() {
-        return security;
+
+    public void validate(UserSecurityValidate securityValidate){
+        SecurityKeyValidator securityKeyValidator = this.get(securityValidate.getType());
+        if(securityKeyValidator != null){
+            securityKeyValidator.validate(securityValidate.getKey());
+        }
+    }
+    private SecurityKeyValidator get(String type){
+        SecurityKeyValidator securityKeyValidator = map.get(type + "-validator");
+        return securityKeyValidator;
     }
 
-    public void setSecurity(Map<String, UserSecurityValidate> security) {
-        this.security = security;
-    }
-
-    public String getNickname() {
-        return nickname;
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getVerifyType() {
-        return verifyType;
-    }
-
-    public void setVerifyType(String verifyType) {
-        this.verifyType = verifyType;
-    }
 }

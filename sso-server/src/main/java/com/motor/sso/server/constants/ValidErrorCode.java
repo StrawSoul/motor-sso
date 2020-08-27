@@ -23,4 +23,7 @@ public class ValidErrorCode {
      * 请求参数绑定到对象上校验不通过会
      */
     public final static ErrorCode BIND_EXCEPTION = new ErrorCode("VALID00004", "USER_LOCKING", "请求参数绑定到对象上校验不通过会。");
+
+    public final static ErrorCode PARAM_LEGAL_ERROR = new ErrorCode("VALID00005", "PARAM_LEGAL_ERROR", "参数不符合规则");
+
 }

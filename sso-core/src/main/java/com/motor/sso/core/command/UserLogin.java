@@ -22,9 +22,9 @@ package com.motor.sso.core.command;
 public class UserLogin {
 
     private String type;
-    private String securityValue;
     private String securityKey;
-    private String validateCode;
+    private String securityValue;
+    private String captcha;
 
     public String getType() {
         return type;
@@ -50,11 +50,12 @@ public class UserLogin {
         this.securityKey = securityKey;
     }
 
-    public String getValidateCode() {
-        return validateCode;
+
+    public String getCaptcha() {
+        return captcha;
     }
 
-    public void setValidateCode(String validateCode) {
-        this.validateCode = validateCode;
+    public void setCaptcha(String captcha) {
+        this.captcha = captcha;
     }
 }

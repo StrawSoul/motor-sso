@@ -1,6 +1,4 @@
-package com.motor.sso.core.command;
-
-import java.util.Map;
+package com.motor.sso.server.command;
 
 /**
  * ===========================================================================================
@@ -14,49 +12,29 @@ import java.util.Map;
  * ===========================================================================================
  * 变更记录
  * -------------------------------------------------------------------------------------------
- * version: 0.0.0  2020/8/20 10:00  zlj
+ * version: 0.0.0  2020/8/26 14:00  zlj
  * 创建
  * -------------------------------------------------------------------------------------------
  * version: 0.0.1  {date}       {author}
  * <p>
  * ===========================================================================================
  */
-public class UserRegister {
+public class CaptchaCreate {
 
-    private Map<String,UserSecurityValidate> security;
-    private String password;
-    private String nickname;
-    private String verifyType;
+    private String business;
 
-    public Map<String, UserSecurityValidate> getSecurity() {
-        return security;
+    public CaptchaCreate(String business) {
+        this.business = business;
     }
 
-    public void setSecurity(Map<String, UserSecurityValidate> security) {
-        this.security = security;
+    public CaptchaCreate() {
     }
 
-    public String getNickname() {
-        return nickname;
+    public String getBusiness() {
+        return business;
     }
 
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getVerifyType() {
-        return verifyType;
-    }
-
-    public void setVerifyType(String verifyType) {
-        this.verifyType = verifyType;
+    public void setBusiness(String business) {
+        this.business = business;
     }
 }

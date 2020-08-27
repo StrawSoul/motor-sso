@@ -1,6 +1,12 @@
-package com.motor.sso.core.command;
+package com.motor.sso.server.interceptor;
 
-import java.util.Map;
+import com.motor.message.http.servlet.HttpServletCommandBuilder;
+import com.motor.sso.core.SsoUserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.servlet.HandlerInterceptor;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * ===========================================================================================
@@ -14,49 +20,25 @@ import java.util.Map;
  * ===========================================================================================
  * 变更记录
  * -------------------------------------------------------------------------------------------
- * version: 0.0.0  2020/8/20 10:00  zlj
+ * version: 0.0.0  2020/8/27 09:00  zlj
  * 创建
  * -------------------------------------------------------------------------------------------
  * version: 0.0.1  {date}       {author}
  * <p>
  * ===========================================================================================
  */
-public class UserRegister {
+public class CommandBuilderInterceptor implements HandlerInterceptor {
 
-    private Map<String,UserSecurityValidate> security;
-    private String password;
-    private String nickname;
-    private String verifyType;
 
-    public Map<String, UserSecurityValidate> getSecurity() {
-        return security;
+
+    @Override
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        HttpServletCommandBuilder.create(request);
+        return true;
     }
 
-    public void setSecurity(Map<String, UserSecurityValidate> security) {
-        this.security = security;
-    }
-
-    public String getNickname() {
-        return nickname;
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getVerifyType() {
-        return verifyType;
-    }
-
-    public void setVerifyType(String verifyType) {
-        this.verifyType = verifyType;
+    @Override
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+        HttpServletCommandBuilder.remove();
     }
 }

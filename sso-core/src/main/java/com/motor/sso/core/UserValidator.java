@@ -5,6 +5,8 @@ import com.motor.sso.core.command.UserCreate;
 import com.motor.sso.core.command.UserLogin;
 import com.motor.sso.core.command.UserSecurityValidate;
 
+import java.util.Map;
+
 /**
  * ===========================================================================================
  * 设计说明
@@ -25,18 +27,24 @@ import com.motor.sso.core.command.UserSecurityValidate;
  * ===========================================================================================
  */
 public interface UserValidator {
+
     UserValidator createAble(Command<UserCreate> command) ;
-    UserValidator isRepeat(UserSecurityValidate command) ;
 
+    default UserValidator isSecurityKeyLegalAndNotRepeat(UserSecurityValidate userSecurityValidate){
+        isSecurityKeyLegal(userSecurityValidate);
+        isSecurityKeyRepeat(userSecurityValidate);
+        return this;
+    }
 
-    UserValidator isUsernameLegal(String username) ;
-    UserValidator isLegal(UserSecurityValidate command) ;
+    UserValidator isSecurityKeyRepeat(UserSecurityValidate userSecurityValidate) ;
 
-    UserValidator isRequired(String value, String desc) ;
-
-    UserValidator validateSecurityKey(String securityKey, String securityValue) ;
+    UserValidator isSecurityKeyLegal(UserSecurityValidate userSecurityValidate) ;
 
     UserValidator validateUserSecurity(SsoUser user, UserLogin userLogin) ;
 
-    UserValidator validateVerifyCode(UserSecurityValidate userSecurityValidate, String value);
+    UserValidator validateVerifyCode(String business, UserSecurityValidate userSecurityValidate);
+
+    void isEmpty(UserSecurityValidate userSecurityValidate);
+
+    void lostParameter(Object obj);
 }

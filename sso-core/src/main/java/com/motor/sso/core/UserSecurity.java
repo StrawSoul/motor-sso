@@ -28,8 +28,6 @@ public class UserSecurity implements Serializable {
     private String userId;
     private String type;
     private String securityKey;
-    private String securityValue;
-    private String salt;
     private Boolean deleted;
 
     public String getId() {
@@ -56,28 +54,12 @@ public class UserSecurity implements Serializable {
         this.securityKey = securityKey;
     }
 
-    public String getSecurityValue() {
-        return securityValue;
-    }
-
-    public void setSecurityValue(String securityValue) {
-        this.securityValue = securityValue;
-    }
-
     public String getUserId() {
         return userId;
     }
 
     public void setUserId(String userId) {
         this.userId = userId;
-    }
-
-    public String getSalt() {
-        return salt;
-    }
-
-    public void setSalt(String salt) {
-        this.salt = salt;
     }
 
     public Boolean getDeleted() {

@@ -1,4 +1,4 @@
-package com.motor.sso.core.command;
+package com.motor.sso.server.constants;
 
 /**
  * ===========================================================================================
@@ -12,54 +12,25 @@ package com.motor.sso.core.command;
  * ===========================================================================================
  * 变更记录
  * -------------------------------------------------------------------------------------------
- * version: 0.0.0  2020/8/20 10:00  zlj
+ * version: 0.0.0  2020/8/26 11:00  zlj
  * 创建
  * -------------------------------------------------------------------------------------------
  * version: 0.0.1  {date}       {author}
  * <p>
  * ===========================================================================================
  */
-public class UserSecurityValidate {
+public enum  UserSecurityType {
+    username("用户名"),
+    email("邮箱"),
+    mobile("手机号");
 
-    private String type;
-    private String key;
-    private String value;
+    private String label;
 
-    public UserSecurityValidate() {
+    UserSecurityType(String label) {
+        this.label = label;
     }
 
-    public UserSecurityValidate(String type, String key) {
-        this.type = type;
-        this.key = key;
-    }
-
-    public UserSecurityValidate(String type, String key, String value) {
-        this.type = type;
-        this.key = key;
-        this.value = value;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getKey() {
-        return key;
-    }
-
-    public void setKey(String key) {
-        this.key = key;
-    }
-
-    public String getValue() {
-        return value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
+    public String label(){
+        return label;
     }
 }
