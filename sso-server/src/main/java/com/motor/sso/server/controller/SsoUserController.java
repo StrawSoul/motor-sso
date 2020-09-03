@@ -5,11 +5,9 @@ import com.motor.common.message.command.Command;
 import com.motor.common.message.result.ResultBuilder;
 import com.motor.common.message.result.ResultData;
 import com.motor.message.http.servlet.HttpServletCommandBuilder;
+import com.motor.sso.client.CurrentUserRepository;
 import com.motor.sso.core.SsoUserService;
-import com.motor.sso.core.command.UserLogin;
-import com.motor.sso.core.command.UserLogout;
-import com.motor.sso.core.command.UserModifyPassword;
-import com.motor.sso.core.command.UserRegister;
+import com.motor.sso.core.command.*;
 import com.motor.sso.core.dto.SimpleUserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -40,15 +38,18 @@ import static com.motor.sso.core.exception.SSOUserErrorCode.USER_NOT_LOGIN;
  */
 @RestController
 @RequestMapping("user")
-public class SsoUserInfoController {
+public class SsoUserController {
 
     @Autowired
     private SsoUserService ssoUserService;
 
-    @GetMapping("info")
-    public ResultData simpleInfo(String token){
-        Command cmd = HttpServletCommandBuilder.get().data(token).build();
-        SimpleUserInfo simpleUserInfo = ssoUserService.loadSimpleUserInfo(cmd);
+    @Autowired
+    private CurrentUserRepository<SimpleUserInfo> currentUserRepository;
+
+    @GetMapping("simple-info")
+    public ResultData simpleInfo(){
+
+        SimpleUserInfo simpleUserInfo = currentUserRepository.get();
 
         if(simpleUserInfo == null){
             throw new BusinessRuntimeException(USER_NOT_LOGIN);
@@ -60,10 +61,10 @@ public class SsoUserInfoController {
                 .build();
     }
 
-    @GetMapping("username/exits")
-    public ResultData usernameExits(String username){
-        Command cmd = HttpServletCommandBuilder.get().data(username).build();
-        ssoUserService.usernameExits(cmd);
+    @PostMapping("security-key/validate")
+    public ResultData usernameExits(@RequestBody UserSecurityValidate userSecurityValidate){
+        Command cmd = HttpServletCommandBuilder.get().data(userSecurityValidate).build();
+        ssoUserService.validateUserSecurity(cmd);
         return ResultBuilder.getInstance()
                 .success()
                 .build();

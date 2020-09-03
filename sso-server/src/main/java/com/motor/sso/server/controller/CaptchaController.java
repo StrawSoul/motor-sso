@@ -1,13 +1,12 @@
 package com.motor.sso.server.controller;
 
 import com.motor.common.message.command.Command;
-import com.motor.common.message.command.CommandBuilder;
 import com.motor.common.message.result.ResultBuilder;
 import com.motor.common.message.result.ResultData;
 import com.motor.message.http.servlet.HttpServletCommandBuilder;
 import com.motor.sso.core.command.VerifyCodeSend;
 import com.motor.sso.server.command.CaptchaCreate;
-import com.motor.sso.server.impl.CaptchaService;
+import com.motor.sso.server.service.impl.CaptchaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;

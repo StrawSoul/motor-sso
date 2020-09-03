@@ -1,4 +1,12 @@
-package com.motor.sso.core;
+package com.motor.sso.server.service.impl;
+
+import com.motor.common.domain.DefaultPrimaryKeyProducer;
+import com.motor.common.domain.PrimaryKeyProducer;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.stereotype.Service;
+
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * ===========================================================================================
@@ -19,8 +27,24 @@ package com.motor.sso.core;
  * <p>
  * ===========================================================================================
  */
-public interface PrimaryKeyProducer {
+public class SimplePrimaryKeyProducer extends DefaultPrimaryKeyProducer implements PrimaryKeyProducer {
+    private Map<String,String> map;
 
-    String produce(String businessCode);
-    String[] produce(String businessCode, int n);
+    public SimplePrimaryKeyProducer(Map<String, String> map) {
+        this.map = new ConcurrentHashMap<>(map);
+    }
+
+    @Override
+    public String produce(String businessCode) {
+        return super.produce(prefix(businessCode));
+    }
+
+    @Override
+    public String[] produce(String businessCode, int n) {
+        return super.produce(prefix(businessCode), n);
+    }
+
+    private String prefix(String businessCode){
+        return map.getOrDefault(businessCode, businessCode);
+    }
 }

@@ -1,4 +1,4 @@
-package com.motor.sso.server;
+package com.motor.sso.server.application;
 
 import org.mybatis.spring.annotation.MapperScan;
 import org.slf4j.Logger;
@@ -6,6 +6,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.ImportResource;
 
 /**
@@ -28,15 +30,17 @@ import org.springframework.context.annotation.ImportResource;
  * ===========================================================================================
  */
 
-@SpringBootApplication(scanBasePackages = "com.motor.sso.server")
-@ImportResource(locations = { "classpath*:/spring/*.xml"})
+@SpringBootApplication(scanBasePackages = { "com.motor.sso.server"})
+@ImportResource({ "classpath*:/spring/*.xml"})
 @EnableAutoConfiguration
+@EnableDiscoveryClient
+@EnableFeignClients(basePackages = {"com.ibdp.persistent.gateways"})
 @MapperScan("com.motor.sso.server.mapper")
-public class MotorSSOServer {
-    static Logger logger = LoggerFactory.getLogger(MotorSSOServer.class);
+public class MotorSSOCloudServer {
+    static Logger logger = LoggerFactory.getLogger(MotorSSOCloudServer.class);
 
     public static void main(String[] args) throws Exception {
-        SpringApplication.run(MotorSSOServer.class, args);
+        SpringApplication.run(MotorSSOCloudServer.class, args);
         logger.info("启动成功");
     }
 }

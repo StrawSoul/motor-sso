@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: sso-server
+  profiles:
+    active: dev
+  cloud:
+    allowOverride: true
+    overrideNone: true
+#    inetutils:
+#      preferred-networks: 172.16.38
+    nacos:
+      config:
+        server-addr: api.nacos.motor:8848
+        name: sso-server
+        file-extension: yaml
+#        namespace: bd681e56-724e-4240-8f06-64212a66e5f2
+      discovery:
+        server-addr: api.nacos.motor:8848
+#        namespace: ${spring.cloud.nacos.config.namespace}
+logging:
+  config: classpath:log4j2.yml

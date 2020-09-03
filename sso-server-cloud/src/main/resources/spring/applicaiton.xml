@@ -13,30 +13,18 @@
          http://www.springframework.org/schema/mvc
          http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd"
 >
-    <bean name="primaryKeyProducer" class="com.motor.sso.server.service.impl.SimplePrimaryKeyProducer" >
-        <constructor-arg >
-            <map>
-                <entry key="sso-user" value="U"/>
-                <entry key="sso-user-security" value="US"/>
-            </map>
-        </constructor-arg>
-    </bean>
+    <bean name="primaryKeyProducer" class="com.motor.sso.server.service.impl.SimplePrimaryKeyProducer" />
+    <bean name="currentUserRepository" class="com.motor.sso.client.CurrentUserRepository" />
     <bean name="userRepository" class="com.motor.sso.server.service.impl.MybatisUserRepository" />
     <bean name="userValidator" class="com.motor.sso.server.service.impl.UserValidatorImpl" />
     <bean name="userFactory" class="com.motor.sso.server.service.impl.UserFactoryImpl" />
     <!--    <bean name="userCache" class="com.motor.sso.server.service.impl.LocalMapUserCache" />-->
     <bean name="userCache" class="com.motor.sso.server.service.impl.RedisUserCache" />
-    <bean name="currentUserRepository" class="com.motor.sso.client.CurrentUserRepository" />
     <bean name="ssoUserService" class="com.motor.sso.server.service.impl.SsoUserServiceImpl">
         <constructor-arg  ref="userRepository" index="0" />
         <constructor-arg  ref="userValidator" index="1" />
         <constructor-arg  ref="userFactory" index="2" />
         <constructor-arg  ref="userCache" index="3" />
         <constructor-arg  ref="currentUserRepository" index="4" />
-    </bean>
-    <bean name="ssoUserManagementService" class="com.motor.sso.server.service.impl.SSOUserManagementServiceImpl" >
-        <constructor-arg  ref="userRepository" index="0" />
-        <constructor-arg  ref="userValidator" index="1" />
-        <constructor-arg  ref="userFactory" index="2" />
     </bean>
 </beans>

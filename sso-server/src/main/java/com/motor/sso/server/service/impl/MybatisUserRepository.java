@@ -1,4 +1,4 @@
-package com.motor.sso.server.impl;
+package com.motor.sso.server.service.impl;
 
 import com.motor.common.domain.UnSupportRepository;
 import com.motor.sso.core.SsoUser;
@@ -7,13 +7,9 @@ import com.motor.sso.core.UserSecurity;
 import com.motor.sso.server.constants.UserSecurityType;
 import com.motor.sso.server.mapper.SsoUserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
 
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * ===========================================================================================

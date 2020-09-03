@@ -1,4 +1,4 @@
-package com.motor.sso.server.impl;
+package com.motor.sso.server.service.impl;
 
 import com.motor.sso.core.UserCache;
 import com.motor.sso.core.dto.SimpleUserInfo;
@@ -45,8 +45,9 @@ public class RedisUserCache implements UserCache {
     public String save(SimpleUserInfo userInfo) {
         String key = SSOUtils.randomString(6);
         String token = SSOUtils.md5(key, userInfo.getUserId());
-        redisTemplate.opsForValue().set(getUserKey(token), userInfo);
-        redisTemplate.expire(token, 30, TimeUnit.MINUTES);
+        String userKey = getUserKey(token);
+        redisTemplate.opsForValue().set(userKey, userInfo);
+        redisTemplate.expire(userKey, 30, TimeUnit.MINUTES);
         return token;
     }
 

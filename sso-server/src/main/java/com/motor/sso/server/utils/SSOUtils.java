@@ -2,7 +2,6 @@ package com.motor.sso.server.utils;
 
 import com.google.common.hash.Hashing;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.omg.CORBA.PUBLIC_MEMBER;
 
 /**
  * ===========================================================================================

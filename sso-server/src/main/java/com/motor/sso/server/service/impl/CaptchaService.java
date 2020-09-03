@@ -1,8 +1,7 @@
-package com.motor.sso.server.impl;
+package com.motor.sso.server.service.impl;
 
 import com.motor.common.exception.BusinessRuntimeException;
 import com.motor.common.message.command.Command;
-import com.motor.common.utils.MotorUtils;
 import com.motor.sso.core.UserCache;
 import com.motor.sso.core.command.UserSecurityValidate;
 import com.motor.sso.core.command.VerifyCodeSend;

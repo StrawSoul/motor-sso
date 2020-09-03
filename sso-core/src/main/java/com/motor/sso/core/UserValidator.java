@@ -28,7 +28,7 @@ import java.util.Map;
  */
 public interface UserValidator {
 
-    UserValidator createAble(Command<UserCreate> command) ;
+    UserValidator createAble(UserCreate userCreate) ;
 
     default UserValidator isSecurityKeyLegalAndNotRepeat(UserSecurityValidate userSecurityValidate){
         isSecurityKeyLegal(userSecurityValidate);

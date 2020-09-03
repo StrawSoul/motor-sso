@@ -36,7 +36,7 @@ Configuration:
       AppenderRef:
         - ref: ASYNC
     logger:
-      - name: com.motor.sso.server.impl
+      - name: com.motor.sso.server.service.impl
         level: debug
         additivity: false
         AppenderRef:

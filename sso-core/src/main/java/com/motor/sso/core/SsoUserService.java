@@ -28,123 +28,21 @@ import static com.motor.sso.core.UserCache.BUSINESS_REGISTER;
  * <p>
  * ===========================================================================================
  */
-public class SsoUserService {
+public interface SsoUserService {
 
-    private UserRepository userRepository;
+    String loginAsGuest(Command command);
 
-    private UserValidator userValidator;
+    void usernameExits(Command<String> cmd);
 
-    private UserFactory userFactory;
+    void validateUserSecurity(Command<UserSecurityValidate> command);
 
-    private UserCache cache;
+    String register(Command<UserRegister> command);
 
-    private BaseValidator baseValidator = BaseValidator.getInstance();
+    String login(Command<UserLogin> command);
 
-    public SsoUserService(UserRepository userRepository, UserValidator userValidator, UserFactory userFactory, UserCache cache) {
-        this.userRepository = userRepository;
-        this.userValidator = userValidator;
-        this.userFactory = userFactory;
-        this.cache = cache;
-    }
+    void logout(Command<UserLogout> cmd);
 
-    public String register(Command<UserRegister> command){
+    SimpleUserInfo loadSimpleUserInfo(Command<String> cmd);
 
-        UserRegister data = command.data();
-
-        Map<String, UserSecurityValidate> security = data.getSecurity();
-
-        userValidator.lostParameter(security);
-
-        UserSecurityValidate userSecurityValidate = security.get(data.getVerifyType());
-
-        userValidator.lostParameter(userSecurityValidate);
-
-
-        for (Map.Entry<String, UserSecurityValidate> entry : security.entrySet()) {
-            UserSecurityValidate securityValidate = entry.getValue();
-            securityValidate.setType(entry.getKey());
-            userValidator.isSecurityKeyLegalAndNotRepeat(securityValidate);
-        }
-
-        userValidator.validateVerifyCode(BUSINESS_REGISTER,userSecurityValidate);
-
-        SsoUser user = userFactory.createUserForRegister(command);
-
-        userRepository.insert(user);
-
-        return user.getId();
-    }
-
-
-    public void edit(Command<UserEdit> command){
-
-        UserEdit data = command.data();
-
-        SsoUser oldUser = userRepository.findById(data.getId());
-
-        SsoUser newUser = userFactory.edit(oldUser, command);
-
-        userRepository.update(newUser);
-    }
-
-    public void validateUserSecurity(Command<UserSecurityValidate> command){
-
-        UserSecurityValidate data = command.data();
-
-        userValidator.isSecurityKeyLegalAndNotRepeat(data);
-
-    }
-
-    public String loginAsGuest(Command command){
-        SimpleUserInfo simpleUserInfo = userFactory.createGuest();
-        String token = cache.save(simpleUserInfo);
-        return token;
-    }
-
-    public String login(Command<UserLogin> command){
-
-        UserLogin data = command.data();
-
-        userValidator.isEmpty(new UserSecurityValidate(data.getType(),data.getSecurityKey(), data.getSecurityValue()));
-
-        SsoUser user = userRepository.findBySecurityKey(data.getSecurityKey());
-
-        userValidator.validateUserSecurity(user, data);
-
-        SimpleUserInfo simpleUserInfo = userFactory.createSimpleInfo(user);
-
-        String token = cache.save(simpleUserInfo);
-
-        cache.remove(command.token());
-
-        return token;
-    }
-
-    public SimpleUserInfo loadSimpleUserInfo(Command<String> cmd){
-
-        String token = cmd.token();
-
-        baseValidator.isEmpty("token", token);
-
-        SimpleUserInfo simpleUserInfo = cache.get(token);
-
-        return simpleUserInfo;
-    }
-
-
-    public void logout(Command<UserLogout> cmd) {
-
-        UserLogout data = cmd.getData();
-
-        cache.remove(data.getToken());
-
-    }
-
-    public void modifyPassword(Command cmd) {
-
-    }
-
-    public void usernameExits(Command<String> cmd) {
-        userValidator.isSecurityKeyRepeat(new UserSecurityValidate("username", cmd.getData()));
-    }
+    void modifyPassword(Command cmd);
 }

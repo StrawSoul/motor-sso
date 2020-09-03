@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.1.2.RELEASE</version>
+<!--        <relativePath/> &lt;!&ndash; lookup parent from repository &ndash;&gt;-->
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.motor</groupId>
+    <artifactId>sso-server-cloud</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <properties>
+        <spring-cloud.nacos.version>2.1.2.RELEASE</spring-cloud.nacos.version>
+        <springcloud.version>Greenwich.RELEASE</springcloud.version>
+        <springboot.version>2.1.2.RELEASE</springboot.version>
+        <motor.version>1.0-SNAPSHOT</motor.version>
+    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-ribbon</artifactId>
+            <version>${springboot.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+            <version>${springboot.version}</version>
+        </dependency>
+        <!--SpringCloud Alibaba-->
+        <!-- https://mvnrepository.com/artifact/com.alibaba.cloud/spring-cloud-starter-alibaba-nacos-config -->
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+            <version>2.1.2.RELEASE</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+            <version>2.1.2.RELEASE</version>
+        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.alibaba.nacos</groupId>-->
+<!--            <artifactId>nacos-spring-context</artifactId>-->
+<!--            <version>0.3.6</version>-->
+<!--            <exclusions>-->
+<!--                <exclusion>-->
+<!--                    <groupId> com.fasterxml.jackson.core</groupId>-->
+<!--                    <artifactId>jackson-core</artifactId>-->
+<!--                </exclusion>-->
+<!--            </exclusions>-->
+<!--        </dependency>-->
+        <dependency>
+            <groupId>com.motor</groupId>
+            <artifactId>sso-server</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+
+</project>

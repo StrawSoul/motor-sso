@@ -1,20 +1,19 @@
-package com.motor.sso.server.impl;
+package com.motor.sso.server.service.impl;
 
+import com.motor.common.domain.PrimaryKeyProducer;
 import com.motor.common.message.command.Command;
 import com.motor.sso.client.CurrentUserRepository;
-import com.motor.sso.core.PrimaryKeyProducer;
 import com.motor.sso.core.SsoUser;
 import com.motor.sso.core.UserFactory;
 import com.motor.sso.core.UserSecurity;
 import com.motor.sso.core.command.UserCreate;
-import com.motor.sso.core.command.UserEdit;
 import com.motor.sso.core.command.UserRegister;
 import com.motor.sso.core.command.UserSecurityValidate;
 import com.motor.sso.core.dto.SimpleUserInfo;
 import com.motor.sso.server.constants.UserSecurityType;
 import com.motor.sso.server.utils.SSOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -47,26 +46,46 @@ public class UserFactoryImpl implements UserFactory {
     private CurrentUserRepository<SimpleUserInfo> currentUserRepository;
 
     public SsoUser create(Command<UserCreate> command) {
+        String id = primaryKeyProducer.produce("sso-user");
         UserCreate userCreate = command.getData();
         SsoUser ssoUser = new SsoUser();
+        ssoUser.setId(id);
         ssoUser.setDeleted(false);
         ssoUser.setStatus(0);
-//        ssoUser.setUsername(userCreate);
-        return null;
+        ssoUser.setNickname(userCreate.getNickname());
+        ssoUser.setSecurity(new HashMap<>());
+        if(StringUtils.isNotEmpty(userCreate.getUsername())){
+            UserSecurity userSecurity = new UserSecurity();
+            userSecurity.setType(UserSecurityType.username.name());
+            userSecurity.setUserId(id);
+            userSecurity.setSecurityKey(userCreate.getUsername());
+            ssoUser.getSecurity().put(UserSecurityType.username.name(), userSecurity);
+        }
+        if(StringUtils.isNotEmpty(userCreate.getMobile())){
+            UserSecurity userSecurity = new UserSecurity();
+            userSecurity.setType(UserSecurityType.mobile.name());
+            userSecurity.setUserId(id);
+            userSecurity.setSecurityKey(userCreate.getMobile());
+            ssoUser.getSecurity().put(UserSecurityType.mobile.name(), userSecurity);
+        }
+        if(StringUtils.isNotEmpty(userCreate.getEmail())){
+            UserSecurity userSecurity = new UserSecurity();
+            userSecurity.setType(UserSecurityType.email.name());
+            userSecurity.setUserId(id);
+            userSecurity.setSecurityKey(userCreate.getEmail());
+            ssoUser.getSecurity().put(UserSecurityType.email.name(), userSecurity);
+        }
+        return ssoUser;
     }
 
-    public SsoUser edit(SsoUser user, Command<UserEdit> command) {
-        return null;
-    }
 
-    public SsoUser createUserForRegister(Command<UserRegister> command) {
+    public SsoUser createUserForRegister(Command<UserRegister> command, SimpleUserInfo currentUser) {
         UserRegister userRegister = command.getData();
         Map<String, UserSecurityValidate> security = userRegister.getSecurity();
 
         String userId = null;
-        SimpleUserInfo simpleUserInfo = currentUserRepository.get();
-        if(simpleUserInfo != null){
-            userId = simpleUserInfo.getUserId();
+        if(currentUser != null){
+            userId = currentUser.getUserId();
         } else {
             userId = primaryKeyProducer.produce("sso-user");
         }

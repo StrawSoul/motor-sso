@@ -1,11 +1,12 @@
-package com.motor.sso.server.config;
+package com.motor.sso.server.applicaiton;
 
-import com.motor.sso.client.CurrentUserRepository;
-import com.motor.sso.core.*;
-import com.motor.sso.core.dto.SimpleUserInfo;
-import com.motor.sso.server.service.impl.SsoUserServiceImpl;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.mybatis.spring.annotation.MapperScan;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ImportResource;
 
 /**
  * ===========================================================================================
@@ -26,8 +27,16 @@ import org.springframework.context.annotation.Configuration;
  * <p>
  * ===========================================================================================
  */
-@Configuration
-public class ApplicationConfig {
 
+@SpringBootApplication(scanBasePackages = "com.motor.sso.server")
+@ImportResource(locations = { "classpath*:/spring/*.xml"})
+@EnableAutoConfiguration
+@MapperScan("com.motor.sso.server.mapper")
+public class MotorSSOStandardServer {
+        static Logger logger = LoggerFactory.getLogger(MotorSSOStandardServer.class);
 
+        public static void main(String[] args) throws Exception {
+            SpringApplication.run(MotorSSOStandardServer.class, args);
+            logger.info("MotorSSOStandardServer start up !!!");
+        }
 }

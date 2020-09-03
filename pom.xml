@@ -11,6 +11,8 @@
         <module>sso-core</module>
         <module>sso-server</module>
         <module>sso-client</module>
+        <module>sso-server-cloud</module>
+        <module>sso-server-standard</module>
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

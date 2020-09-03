@@ -1,0 +1,43 @@
+Configuration:
+  status: warn
+  Properties:
+    Property:
+       - name: log.pattern
+         value: "%d [%t] %-5p [%c] %X - %m%n"
+#         value: "[%d{yy-MM-dd HH:mm:ss}] -%t -%-5p\:%m%n"
+  Appenders:
+    Console:
+      name: CONSOLE
+      target: SYSTEM_OUT
+      PatternLayout:
+        pattern: ${log.pattern}
+    RollingRandomAccessFile:
+      name: RollingFile
+      fileName: /work/logs/sso-server/out.log
+      filePattern: /work/logs/sso-server/out.log.%d{yyyy-MM-dd}_%i
+      immediateFlush: false
+      append: true
+      PatternLayout:
+        pattern: ${log.pattern}
+      Policies:
+        TimeBasedTriggeringPolicy:
+          modulate: true
+          interval: 1
+        SizeBasedTriggeringPolicy:
+          size: 50 MB
+    Async:
+      name: ASYNC
+      AppenderRef:
+        - ref: CONSOLE
+        - ref: RollingFile
+  Loggers:
+    Root:
+      level: info
+      AppenderRef:
+        - ref: ASYNC
+    logger:
+      - name: com.motor.sso.server.service.impl
+        level: debug
+        additivity: false
+        AppenderRef:
+          - ref: ASYNC

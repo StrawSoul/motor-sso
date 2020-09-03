@@ -29,9 +29,7 @@ public interface UserFactory {
 
     SsoUser create(Command<UserCreate> command);
 
-    SsoUser edit(SsoUser user, Command<UserEdit> command);
-
-    SsoUser createUserForRegister(Command<UserRegister> command);
+    SsoUser createUserForRegister(Command<UserRegister> command, SimpleUserInfo currentUser);
 
     SimpleUserInfo createSimpleInfo(SsoUser user);
 

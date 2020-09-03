@@ -1,15 +1,8 @@
-package com.motor.sso.server.impl;
+package com.motor.sso.server.service.impl;
 
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
-import com.google.common.hash.HashFunction;
-import com.google.common.hash.Hashing;
 import com.motor.sso.core.UserCache;
 import com.motor.sso.core.dto.SimpleUserInfo;
 import com.motor.sso.server.utils.SSOUtils;
-import org.springframework.stereotype.Service;
-import sun.security.provider.MD5;
-import sun.security.rsa.RSASignature;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

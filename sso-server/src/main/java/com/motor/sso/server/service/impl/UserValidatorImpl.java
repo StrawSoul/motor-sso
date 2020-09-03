@@ -1,4 +1,4 @@
-package com.motor.sso.server.impl;
+package com.motor.sso.server.service.impl;
 
 import com.google.common.base.Strings;
 import com.motor.common.exception.BusinessRuntimeException;
@@ -11,15 +11,14 @@ import com.motor.sso.core.UserValidator;
 import com.motor.sso.core.command.UserCreate;
 import com.motor.sso.core.command.UserLogin;
 import com.motor.sso.core.command.UserSecurityValidate;
+import com.motor.sso.server.constants.UserSecurityType;
 import com.motor.sso.server.handler.SmartSecurityKeyValidator;
 import com.motor.sso.server.utils.SSOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 
 import static com.motor.sso.core.exception.SSOUserErrorCode.*;
 
@@ -48,14 +47,25 @@ public class UserValidatorImpl implements UserValidator {
     private UserRepository userRepository;
     @Autowired
     private CaptchaService captchaService;
-
     @Autowired
     private SmartSecurityKeyValidator smartSecurityKeyValidator;
 
 
-    public UserValidator createAble(Command<UserCreate> command) {
+    public UserValidator createAble(UserCreate userCreate) {
+        if(userCreate == null){
+            throw new BusinessRuntimeException(PARAMETER_LOST);
+        }
+        this.isSecurityKeyLegalAndNotRepeat(new UserSecurityValidate(UserSecurityType.username.name(), userCreate.getUsername()));
+
+        if(StringUtils.isNotEmpty(userCreate.getMobile())){
+            this.isSecurityKeyLegalAndNotRepeat(new UserSecurityValidate(UserSecurityType.mobile.name(), userCreate.getMobile()));
+        }
+        if(StringUtils.isNotEmpty(userCreate.getMobile())){
+            this.isSecurityKeyLegalAndNotRepeat(new UserSecurityValidate(UserSecurityType.email.name(), userCreate.getEmail()));
+        }
         return this;
     }
+
 
     @Override
     public UserValidator isSecurityKeyRepeat(UserSecurityValidate userSecurityValidate) {
@@ -77,9 +87,9 @@ public class UserValidatorImpl implements UserValidator {
     }
 
     public UserValidator isSecurityKeyLegal(UserSecurityValidate userSecurityValidate) {
-        if(MotorUtils.isNull(userSecurityValidate)
-                || MotorUtils.isNull(userSecurityValidate.getType())
-                || MotorUtils.isNull(userSecurityValidate.getKey())){
+        if(MotorUtils.isEmpty(userSecurityValidate)
+                || MotorUtils.isEmpty(userSecurityValidate.getType())
+                || MotorUtils.isEmpty(userSecurityValidate.getKey())){
             throw new BusinessRuntimeException(PARAMETER_LOST);
         }
         smartSecurityKeyValidator.validate(userSecurityValidate);
@@ -107,10 +117,10 @@ public class UserValidatorImpl implements UserValidator {
 
     @Override
     public void isEmpty(UserSecurityValidate userSecurityValidate) {
-        if(MotorUtils.isNull(userSecurityValidate)
-                || MotorUtils.isNull(userSecurityValidate.getType())
-                || MotorUtils.isNull(userSecurityValidate.getKey())
-                || MotorUtils.isNull(userSecurityValidate.getValue())){
+        if(MotorUtils.isEmpty(userSecurityValidate)
+                || MotorUtils.isEmpty(userSecurityValidate.getType())
+                || MotorUtils.isEmpty(userSecurityValidate.getKey())
+                || MotorUtils.isEmpty(userSecurityValidate.getValue())){
             throw new BusinessRuntimeException(PARAMETER_LOST);
         }
     }
