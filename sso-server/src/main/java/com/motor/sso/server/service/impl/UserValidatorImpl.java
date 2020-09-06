@@ -3,7 +3,7 @@ package com.motor.sso.server.service.impl;
 import com.google.common.base.Strings;
 import com.motor.common.exception.BusinessRuntimeException;
 import com.motor.common.message.command.Command;
-import com.motor.common.utils.MotorUtils;
+import com.motor.common.utils.M;
 import com.motor.sso.core.SsoUser;
 import com.motor.sso.core.UserRepository;
 import com.motor.sso.core.UserSecurity;
@@ -87,9 +87,9 @@ public class UserValidatorImpl implements UserValidator {
     }
 
     public UserValidator isSecurityKeyLegal(UserSecurityValidate userSecurityValidate) {
-        if(MotorUtils.isEmpty(userSecurityValidate)
-                || MotorUtils.isEmpty(userSecurityValidate.getType())
-                || MotorUtils.isEmpty(userSecurityValidate.getKey())){
+        if(M.isEmpty(userSecurityValidate)
+                || M.isEmpty(userSecurityValidate.getType())
+                || M.isEmpty(userSecurityValidate.getKey())){
             throw new BusinessRuntimeException(PARAMETER_LOST);
         }
         smartSecurityKeyValidator.validate(userSecurityValidate);
@@ -117,10 +117,10 @@ public class UserValidatorImpl implements UserValidator {
 
     @Override
     public void isEmpty(UserSecurityValidate userSecurityValidate) {
-        if(MotorUtils.isEmpty(userSecurityValidate)
-                || MotorUtils.isEmpty(userSecurityValidate.getType())
-                || MotorUtils.isEmpty(userSecurityValidate.getKey())
-                || MotorUtils.isEmpty(userSecurityValidate.getValue())){
+        if(M.isEmpty(userSecurityValidate)
+                || M.isEmpty(userSecurityValidate.getType())
+                || M.isEmpty(userSecurityValidate.getKey())
+                || M.isEmpty(userSecurityValidate.getValue())){
             throw new BusinessRuntimeException(PARAMETER_LOST);
         }
     }
